@@ -1,9 +1,8 @@
 Kotlin (Java) Serialization test
 --------------------------------
+Application to test of speed for several different serialization methods.
 
-Application to speed test for different serialization methods.
-
-Used methods are:
+Implementd methods are:
 * Java native Serializable interface.
 * Java native Externalizable interface.
 * Serialization using [fasterXML-jackson](https://github.com/FasterXML/jackson) library.
@@ -17,7 +16,7 @@ Application depends on:
 * [minimal-json](https://github.com/ralfstx/minimal-json) library.
 
 ##Test sequence
-1. Generate random data contains of tree with string data.
+1. Generate random data contains simple tree of elements with string data.
 2. Run all tests one by one with same data. Each test will store data to the disk, read it and compare loaded with original. 
 3. Repeat run cycle by specified number of "retry".
 
