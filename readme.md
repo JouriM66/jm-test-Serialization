@@ -2,7 +2,7 @@ Kotlin (Java) Serialization test
 --------------------------------
 Application to test of speed for several different serialization methods.
 
-Implementd methods are:
+Implemented methods are:
 * Java native Serializable interface.
 * Java native Externalizable interface.
 * Serialization using [fasterXML-jackson](https://github.com/FasterXML/jackson) library.
