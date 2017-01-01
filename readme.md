@@ -1,5 +1,7 @@
 Kotlin (Java) Serialization test
 --------------------------------
+Ссылка на описание на русском языке находится [ТУТ](readme.rus.md).
+
 Application to test of speed for several different serialization methods.
 
 Implemented methods are:

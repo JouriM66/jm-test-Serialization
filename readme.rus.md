@@ -1,26 +1,28 @@
-Kotlin (Java) Serialization test
+Kotlin (Java) тест сериализации
 --------------------------------
-Application to test of speed for several different serialization methods.
+Link to English readme is [HERE](readme.md)
 
-Implemented methods are:
-* Java native Serializable interface.
-* Java native Externalizable interface.
-* Serialization using [fasterXML-jackson](https://github.com/FasterXML/jackson) library.
-* Serialization using [minimal-json](https://github.com/ralfstx/minimal-json) library.
-* Serialization to Java SDK XML format (org.w3c.dom).
+Программа для тестирования скорсоти различных алгоритмов сериализации для Java.
 
-## Depends
-Application depends on:
-* [JM base](https://github.com/JouriM66/jm-lib-kotlin) library.
-* [fasterXML-jackson](https://github.com/FasterXML/jackson) library.
-* [minimal-json](https://github.com/ralfstx/minimal-json) library.
+В тесте используются:
+* Родной для Java интерфейс Serializable.
+* Родной для Java интерфейс Externalizable.
+* Сериализация с использованием библиотеки [fasterXML-jackson](https://github.com/FasterXML/jackson).
+* Сериализация с использованием библиотеки [minimal-json](https://github.com/ralfstx/minimal-json).
+* Сериализация во входящий в состав Java SDK формат XML format (org.w3c.dom).
 
-##Test sequence
-1. Generate random data contains simple tree of elements with string data.
-2. Run all tests one by one with same data. Each test will store data to the disk, read it and compare loaded with original. 
-3. Repeat run cycle by specified number of "retry".
+## Зависимости
+Приложение зависит от следующих библиотек:
+* Базовая библиотека [JM base](https://github.com/JouriM66/jm-lib-kotlin).
+* Библиотека [fasterXML-jackson](https://github.com/FasterXML/jackson).
+* Библиотека [minimal-json](https://github.com/ralfstx/minimal-json).
 
-##Usage
+## Действия теста
+1. Генерируются случайные данные в форме простого дерева из строковых объектов.
+2. Запусаются по очереди все тесты для сгенерированных данных. Каждый тест сохраняет нданные на диск, читает их с него и проверяет соответствие прочитанного оригиналу. 
+3. Повтор запуска всех тестовуказанное в параметре "retry" число раз.
+
+## Интерфейс
 ```
 >sb.bat -?
 
@@ -36,11 +38,11 @@ Where OPTS are:
 ```
 
 ##Results
-For test call application with desired parameters:
+Для тестирования запустите утилиту с нужными параметрами:
 ```
 sb -n "-c=30000" "-r=3"
 ```
-after running all tests u`ll see at current console test results as below:
+После того как будет произведено тестирование программа распечатает в текущую консоль таблицу с результатами сравнения:
 ```
 Output file       : test_out
 Number of elements: 30000
@@ -59,9 +61,9 @@ N               Name |            Save |   Best |  Worst |            Load |   B
 ----------------------------------------------------------------------------------------------------------------------------------
 ```
 
-Where:
-- First number - is the test place (from best to worst) calculated by total time spend.
-- "Best" and "Worst" columns displays difference between current test and best or worst in category.
-- Save - time spend by test storing test data. 
-- Load - time spend by test loading stored data.
-- Total - time spend by test in total.
+Где:
+- Первая цифра - место, которое занял тест, от лучшего к худшему.
+- Колонки "Best" и "Worst" содержат отличие текущего теста от лучшего и худшего в категории.
+- Save - время затраченное тестом на сохранение данных. 
+- Load - время затраченное тестом на загрузку данных.
+- Total - Общее время затраченное тестом.
