@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: jm.jar kotlin-runtime.jar kotlin-reflect.jar minimal-json-
+ 0.9.4.jar
+Main-Class: jm.test.Serialize.SerMainKt
+
