@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonToken
-import jm.lib.Plog
+import jm.lib.PLog
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -82,7 +82,7 @@ class TestJacksonStream : RandomSerialData() {
   // -------------------------------------------------------------------------
   // LOAD
   // -------------------------------------------------------------------------
-  val log = Plog(false)
+  val log = PLog(false)
 
   fun loadString(s : JsonParser) : String {
     check(s.currentToken == JsonToken.VALUE_STRING) { "Must be string for ${s.currentName}" }
