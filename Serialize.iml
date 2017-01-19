@@ -13,5 +13,6 @@
     <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-annotations:2.0.4" level="application" />
     <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-core:2.0.4" level="application" />
     <orderEntry type="library" name="com.fasterxml.jackson.core:jackson-databind:2.0.4" level="application" />
+    <orderEntry type="library" name="be.cyberelf.nanoxml:nanoxml:2.2.3" level="application" />
   </component>
 </module>

@@ -28,7 +28,9 @@
 ### Пример использования
 
 Использование этого класса элементарно – одной операцией и не требует написания ни одной лишней буквы.
+
 <spoiler title="Код программы">
+
 ```kotlin
 class DataClass(s : String) : Serializable {
   @JvmField var strField = ""
@@ -140,8 +142,8 @@ prot value = [prot=dataA]
 
 * Поддерживается сохранение классов типа `«enum»` с корректным их восстановлением.
 
-* Поддерживается сохранение и восстановление любых коллекций, основанных на интерфейсах `List`, `Tree` и `Map`.
-Т.е. для того чтобы сохранить и восстановить все элементы списка или даже дерева не нужно писать никакого дополнительного кода, достаточно сохранить его как объект.
+* Поддерживается сохранение и восстановление любых объектов, которые имеет интерфейс-маркер Serializable. В частности, будут автоматически сохраняться все стандартные JDK коллекции, основанные на List, Set и Map т.к. все их реализации этот маркер имеют.
+Т.е. для того чтобы сохранить и восстановить все элементы списка или даже дерева не нужно писать никакого дополнительного кода, достаточно чтобы объекты были обозначены интерфейсом "Serializable".
 
 * Автоматически сохраняются и восстанавливаются данные всех предков и, при наследовании от этого класса, так же будут сохраняться все данные текущего.
 Никаких дополнительных действий для обеспечения сохранения и восстановления всей цепочки наследования предпринимать не нужно.
@@ -186,11 +188,26 @@ ID: 991989581060349712
 
 #### Управление сохраняемыми данными
 
-Часто сохранять и восстанавливать нужно не все существующие у объекта данные, но только часть из них. При развитии объекта, иногда, требуется возможность восстанавливать его содержимое, даже если формат объекта уже полностью изменился. Для этого нужно уметь читать поля, которых в классе уже нет, у которых изменилось имя или тип.
+Часто сохранять и восстанавливать нужно не все существующие у объекта данные, но только часть из них или восстанавливать их в формате, которые не соответствует их фактическому типу.
 
-Возможность такой фильтрации сохраняемых данных существует.
+Первой возможностью управления является механизм исключений.
+Для того, чтобы исключить какое-то поле из списка обрабатываемых его нужно пометить специальным типом "transient". В Java для этого используется специальное ключевое слово, а в `Kotlin` необходимо использовать специальную аннотацию.
+ 
+```kotlin
+class DataClass : Serializable {
+  @JvmField var strField = ""
+  @JvmField var intField = 0
+  @Transient
+  @JvmField var dbField = 0.0
+}
+```
 
-В Java можно пометить поле, которое не нужно сохранять, специальным модификатором `transient`, но у Kotlin такой модификатор отсутствует. Более гибким механизмом фильтрации полей является описание статической константы с именем `serialPersistentFields`.
+При обработке объектов этого класса библиотека сериализации не будет ни сохранять ни восстанавливать значения для поля "`dbField`". Все остальные поля будут сохранены и восстановлены как обычно.
+Этот механизм удобно использовать в случаях, когда объекты поля, значения которых не имеет смысла или нельзя сохранять.
+Устанавливать значения полей, которые не будут обрабатываться автоматически, программист должен самостоятельно, после загрузки. Для этого можно воспользоваться методом "`readResolve`", который описан ниже. 
+ 
+Вторая возможность управления сохранением заключается в том, что можно указать имена и типы полей, которые будут использованы для сохранения и загрузки.
+При развитии объекта, иногда, требуется возможность восстанавливать его содержимое, даже если формат объекта уже полностью изменился. Для этого нужно уметь читать поля, которых в классе уже нет, у которых изменилось имя или тип. Это можно усуществить с помощью механизма фильтрации полей, описав статическую константу с именем `serialPersistentFields`.
 
 <spoiler title="Код программы">
 
@@ -248,7 +265,7 @@ int = [95356375]
 db = [0,000000]
 ```
 
-#### Ручное управление сохраняемыми данными
+#### Сохранение и восстановление данных вручную
 
 Иногда, описать структуру или изменения в ней так, чтобы автоматизированные средства работали без ошибок не удается. В таком случае нужно сохранять или восстанавливать значения полей класса вручную, но при этом не хотелось бы лишаться всех преимуществ, предоставляемых автоматизированными средствами.
 
@@ -529,18 +546,18 @@ open class DataClass : Externalizable {
 Автоматически генерируемые случайные данные выглядят следующим образом:
 
 ```
-  0) <noname>		addCaller.t_ForOrGetPut		org.sun.NotNotEmptyGetEach( SetEmptyCombineSplit )
-  1) fNotRandom						addCaller.For(void, addCaller.t_HasEmpty Has, addCaller.t_Combine GetCombineHas )
-  2) fOrSet						app.PutHasForGet( app.t_Set HasCombineAdd, app.t_ForNotOrAdd Combine )
-  3) fHasSplit						org.sun.Set(  Set, sec.sun.t_JoinEmptyHasCombineCombine EmptyCombineOr )
-  4) fJoinEach		sec.sun.t_OrForEmptySet		sec.sun.EachPutOrNot( org.sun.t_Combine SetHasSplitJoinEmpty, void )
-  5) fEachSet		org.sun.t_RandomSplit		app.OrIsFor( sec.sun.t_Set CombineGetRandom, void )
-  6) <noname>		app.t_NotSetForForGet		sun.NotHasForSplitAdd( org.sun.t_IsRandomOrHas Each, void)
-  7) fNotSplit		addCaller.t_NotAdd			sec.sun.IsHasNot( app.t_HasForSplitHas ForGet, void )
-  8) <noname>						sun.SetForSplitSet( PutCombine, void, void )
-  9) fCombineNot	sun.t_SplitRandomGetRandom	sun.AddAdd( void, org.sun.t_NotRandomHasEmpty AddPutNotSplit )
- 10) <noname>		addCaller.t_ForIs			sun.EachIs( NotFor, void, void,  PutSplitAddNot )
- 11) fSetOr						app.HasJoin( OrOr, void, void, addCaller.t_NotAddHas Each )
+  0) <noname>   addCaller.t_ForOrGetPut   org.sun.NotNotEmptyGetEach( SetEmptyCombineSplit )
+  1) fNotRandom           addCaller.For(void, addCaller.t_HasEmpty Has, addCaller.t_Combine GetCombineHas )
+  2) fOrSet           app.PutHasForGet( app.t_Set HasCombineAdd, app.t_ForNotOrAdd Combine )
+  3) fHasSplit            org.sun.Set(  Set, sec.sun.t_JoinEmptyHasCombineCombine EmptyCombineOr )
+  4) fJoinEach    sec.sun.t_OrForEmptySet   sec.sun.EachPutOrNot( org.sun.t_Combine SetHasSplitJoinEmpty, void )
+  5) fEachSet   org.sun.t_RandomSplit   app.OrIsFor( sec.sun.t_Set CombineGetRandom, void )
+  6) <noname>   app.t_NotSetForForGet   sun.NotHasForSplitAdd( org.sun.t_IsRandomOrHas Each, void)
+  7) fNotSplit    addCaller.t_NotAdd      sec.sun.IsHasNot( app.t_HasForSplitHas ForGet, void )
+  8) <noname>           sun.SetForSplitSet( PutCombine, void, void )
+  9) fCombineNot  sun.t_SplitRandomGetRandom  sun.AddAdd( void, org.sun.t_NotRandomHasEmpty AddPutNotSplit )
+ 10) <noname>   addCaller.t_ForIs     sun.EachIs( NotFor, void, void,  PutSplitAddNot )
+ 11) fSetOr           app.HasJoin( OrOr, void, void, addCaller.t_NotAddHas Each )
 ``` 
 
 Имена методов, типов и исходных файлов генерируются из набора случайных имен.

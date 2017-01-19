@@ -19,8 +19,13 @@ open class DataClass : Externalizable {
   @JvmField var link : LinkedData
   @JvmField var intField : Int
 
-  constructor() { link = LinkedData.ZERO; intField = 0 }
-  constructor(v : Int) { link = LinkedData.make(v); intField = v }
+  constructor() {
+    link = LinkedData.ZERO; intField = 0
+  }
+
+  constructor(v : Int) {
+    link = LinkedData.make(v); intField = v
+  }
 
   fun print() = outn("int = [%d]\nlink = [%s]", intField,
                      if (link == LinkedData.ZERO) "ZERO" else
@@ -28,12 +33,12 @@ open class DataClass : Externalizable {
                          "OTHER!")
 
   override fun readExternal(s : ObjectInput) {
-    link = if ( s.readByte().toInt() == 0 ) LinkedData.ZERO else LinkedData.NONZERO
+    link = if (s.readByte().toInt() == 0) LinkedData.ZERO else LinkedData.NONZERO
     intField = s.readInt()
   }
 
   override fun writeExternal(s : ObjectOutput) {
-    s.writeByte(if(link == LinkedData.ZERO) 0 else 1)
+    s.writeByte(if (link == LinkedData.ZERO) 0 else 1)
     s.writeInt(intField)
   }
 }
@@ -91,6 +96,7 @@ Where OPTS are:
   -Count=<number>        - set number of items to generate
   -Retry=<number>        - set number of iterations for each test
   -Out=<file>            - set file name to output
+  -Test[=<name>]         - set name of test to execute or "all" for run all tests
   -Nout                  - disable items output
   -gc                    - run gc after every test
 """)
@@ -199,8 +205,6 @@ Where OPTS are:
       .preRegister()
       .ParseArgs(a)
 
-    //Action(); abort()
-
     if (a.Check("?")) OutUsage()
     Opts.nCount = a.Arg("C;COUNT", "5").toInt().max(1)
     Opts.nRetry = a.Arg("R;RETRY", "5").toLong().max(1)
@@ -218,7 +222,8 @@ Where OPTS are:
 
     //Tests
     val tests = listOf(
-      TestInfo("SerialFull", TestSerializableFull(), testItems)
+      TestInfo("NanoXML", TestNanoXML(), testItems)
+      , TestInfo("SerialFull", TestSerializableFull(), testItems)
       , TestInfo("ExternFull", TestExternalizableFull(), testItems)
       , TestInfo("Extern+Ser", TestExternalizable(), testItems)
       , TestInfo("XMLw3c", TestXML(), testItems)
@@ -229,9 +234,21 @@ Where OPTS are:
 
     //Execute
     val per = Period(0)
-    for (i in Opts.nRetry) {
-      for (n in tests.size) {
-        tests[n].rc += DoTest(tests[n])
+    val selTest = a.Arg("T;TEST", "all").toUpperCase()
+    if (selTest == "ALL")
+      for (i in Opts.nRetry) {
+        for (n in tests.size) {
+          tests[n].rc += DoTest(tests[n])
+          if (Opts.doGC) Runtime.getRuntime().gc()
+        }
+      }
+    else {
+      val idx = tests.indexOfFirst { it.name.toUpperCase() == selTest }
+      if (idx == -1) abort("Specified test \"$selTest\" not exist. Please enter correct test name.")
+      val t = tests[idx]
+
+      for (i in Opts.nRetry) {
+        t.rc += DoTest(t)
         if (Opts.doGC) Runtime.getRuntime().gc()
       }
     }
@@ -250,15 +267,14 @@ Where OPTS are:
         .map { it.rc.total }
         .sorted()
 
-    note("-".repeat(130) + "\n" +
-           "%-4s %15s | %15s | %6s | %6s | %15s | %6s | %6s | %15s | %6s | %6s\n" +
-           "-".repeat(130) + "\n",
+    note("%2s | %15s | %15s | %6s | %6s | %15s | %6s | %6s | %15s | %6s | %6s\n",
          "N", "Name",
          "Save", "Best", "Worst",
          "Load", "Best", "Worst",
          "Total", "Best", "Worst")
+    note("---|-----------------|-----------------|-------:|-------:|-----------------|-------:|-------:|-----------------|-------:|--------:\n")
     tests.forEach {
-      note("%-4d %-15s | ", rcTotal.indexOf(it.rc.total) + 1, it.name)
+      note("%-2d | %-15s | ", rcTotal.indexOf(it.rc.total) + 1, it.name)
 
       var times = tests.map { it.rc.save }
       note("%15s | %6s | %6s | ",

@@ -11,11 +11,20 @@ Implemented methods are:
 * Serialization using [minimal-json](https://github.com/ralfstx/minimal-json) library.
 * Serialization to Java SDK XML format (org.w3c.dom).
 
+## Changes
+
+* 19.01.2017
+  - Added "NanoXML" library (actually very slow).
+  - Added option ``-Test=<name>`` to run single test.
+
 ## Depends
+
 Application depends on:
+
 * [JM base](https://github.com/JouriM66/jm-lib-kotlin) library.
 * [fasterXML-jackson](https://github.com/FasterXML/jackson) library.
 * [minimal-json](https://github.com/ralfstx/minimal-json) library.
+* [nanoXML](http://nanoxml.sourceforge.net) library.
 
 ##Test sequence
 1. Generate random data contains simple tree of elements with string data.
@@ -47,19 +56,22 @@ after running all tests u`ll see at current console test results as below:
 Output file       : test_out
 Number of elements: 30000
 Number of retries : 3
-Tests complete in 0:00:11.164 sec :: Save 0:00:03.880, Load 0:00:04.217, Total 0:00:08.112, Waste 0:00:03.052
-----------------------------------------------------------------------------------------------------------------------------------
-N               Name |            Save |   Best |  Worst |            Load |   Best |  Worst |           Total |   Best |  Worst
-----------------------------------------------------------------------------------------------------------------------------------
-6    SerialFull      |     0:00:00.754 |   2,15 |   0,28 |     0:00:00.601 |   1,09 |   1,22 |     0:00:01.358 |   1,39 |   0,70 |
-1    ExternFull      |     0:00:00.281 |   0,18 |   2,43 |     0:00:00.287 |     == |   3,65 |     0:00:00.569 |     == |   3,05 |
-4    Extern+Ser      |     0:00:00.549 |   1,30 |   0,76 |     0:00:00.490 |   0,71 |   1,72 |     0:00:01.042 |   0,83 |   1,21 |
-7    XMLw3c          |     0:00:00.965 |   3,04 |     == |     0:00:01.334 |   3,65 |     == |     0:00:02.302 |   3,05 |     == |
-5    JsJsonMini      |     0:00:00.501 |   1,10 |   0,93 |     0:00:00.729 |   1,54 |   0,83 |     0:00:01.231 |   1,16 |   0,87 |
-3    JsJackAnn       |     0:00:00.591 |   1,47 |   0,63 |     0:00:00.367 |   0,28 |   2,63 |     0:00:00.959 |   0,69 |   1,40 |
-2    JsJackSream     |     0:00:00.239 |     == |   3,04 |     0:00:00.409 |   0,43 |   2,26 |     0:00:00.651 |   0,14 |   2,54 |
-----------------------------------------------------------------------------------------------------------------------------------
+Tests complete in 0:00:21.319 sec :: Save 0:00:06.905, Load 0:00:09.836, Total 0:00:16.759, Waste 0:00:04.560
 ```
+
+Result table
+------------
+ N |            Name |            Save |   Best |  Worst |            Load |   Best |  Worst |           Total |   Best |  Worst
+---|-----------------|-----------------|-------:|-------:|-----------------|-------:|-------:|-----------------|-------:|--------:
+8  | NanoXML         |     0:00:02.483 |  10,34 |     == |     0:00:04.993 |  13,06 |     == |     0:00:07.480 |  11,12 |     == |
+5  | SerialFull      |     0:00:00.743 |   2,39 |   2,34 |     0:00:00.646 |   0,82 |   6,73 |     0:00:01.391 |   1,25 |   4,38 |
+4  | ExternFull      |     0:00:00.269 |   0,23 |   8,23 |     0:00:00.992 |   1,79 |   4,03 |     0:00:01.264 |   1,05 |   4,92 |
+6  | Extern+Ser      |     0:00:00.922 |   3,21 |   1,69 |     0:00:00.551 |   0,55 |   8,06 |     0:00:01.473 |   1,39 |   4,08 |
+7  | XMLw3c          |     0:00:01.068 |   3,88 |   1,32 |     0:00:01.345 |   2,79 |   2,71 |     0:00:02.416 |   2,92 |   2,10 |
+3  | JsJsonMini      |     0:00:00.635 |   1,90 |   2,91 |     0:00:00.557 |   0,57 |   7,96 |     0:00:01.195 |   0,94 |   5,26 |
+2  | JsJackAnn       |     0:00:00.566 |   1,58 |   3,39 |     0:00:00.355 |     == |  13,06 |     0:00:00.923 |   0,50 |   7,10 |
+1  | JsJackSream     |     0:00:00.219 |     == |  10,34 |     0:00:00.397 |   0,12 |  11,58 |     0:00:00.617 |     == |  11,12 |
+
 
 Where:
 - First number - is the test place (from best to worst) calculated by total time spend.
