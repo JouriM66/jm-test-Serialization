@@ -19,7 +19,7 @@ Link to English readme is [HERE](readme.md)
 
 ## Зависимости
 Приложение зависит от следующих библиотек:
-* Базовая библиотека [JM base](https://github.com/JouriM66/jm-lib-kotlin).
+* Базовая библиотека [JM parent](https://github.com/JouriM66/jm-lib-kotlin).
 * Библиотека [fasterXML-jackson](https://github.com/FasterXML/jackson).
 * Библиотека [minimal-json](https://github.com/ralfstx/minimal-json).
 

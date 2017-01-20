@@ -21,7 +21,7 @@ Implemented methods are:
 
 Application depends on:
 
-* [JM base](https://github.com/JouriM66/jm-lib-kotlin) library.
+* [JM parent](https://github.com/JouriM66/jm-lib-kotlin) library.
 * [fasterXML-jackson](https://github.com/FasterXML/jackson) library.
 * [minimal-json](https://github.com/ralfstx/minimal-json) library.
 * [nanoXML](http://nanoxml.sourceforge.net) library.
